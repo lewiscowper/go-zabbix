@@ -2,6 +2,7 @@ package zabbix
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -24,6 +25,9 @@ type Session struct {
 
 	// ApiVersion is the software version string of the connected Zabbix API.
 	APIVersion string `json:"apiVersion"`
+
+	// HTTPCreds is the basic auth credentials for the Zabbix API.
+	HTTPCreds map[string]string
 
 	client *http.Client
 }
@@ -120,6 +124,7 @@ func (c *Session) Do(req *Request) (resp *Response, err error) {
 	}
 	r.ContentLength = int64(len(b))
 	r.Header.Add("Content-Type", "application/json-rpc")
+	r.Header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(c.HTTPCreds["username"]+":"+c.HTTPCreds["password"])))
 
 	// send request
 	client := c.client

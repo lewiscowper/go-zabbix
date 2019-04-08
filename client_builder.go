@@ -8,6 +8,7 @@ type ClientBuilder struct {
 	hasCache    bool
 	url         string
 	credentials map[string]string
+	httpCreds   map[string]string
 	client      *http.Client
 }
 
@@ -23,6 +24,14 @@ func (builder *ClientBuilder) WithCache(cache SessionAbstractCache) *ClientBuild
 func (builder *ClientBuilder) WithCredentials(username string, password string) *ClientBuilder {
 	builder.credentials["username"] = username
 	builder.credentials["password"] = password
+
+	return builder
+}
+
+// WithHTTPCredentials sets auth credentials for HTTP basic auth
+func (builder *ClientBuilder) WithHTTPCredentials(username string, password string) *ClientBuilder {
+	builder.httpCreds["username"] = username
+	builder.httpCreds["password"] = password
 
 	return builder
 }
@@ -46,7 +55,7 @@ func (builder *ClientBuilder) Connect() (session *Session, err error) {
 	}
 
 	// Otherwise - login to a Zabbix server
-	session = &Session{URL: builder.url, client: builder.client}
+	session = &Session{URL: builder.url, client: builder.client, HTTPCreds: builder.httpCreds}
 	err = session.login(builder.credentials["username"], builder.credentials["password"])
 
 	if err != nil {
@@ -66,6 +75,7 @@ func CreateClient(apiEndpoint string) *ClientBuilder {
 	return &ClientBuilder{
 		url:         apiEndpoint,
 		credentials: make(map[string]string),
+		httpCreds:   make(map[string]string),
 		client:      &http.Client{},
 	}
 }
