@@ -464,11 +464,11 @@ func (c *Session) HostCreate(host HostCreateParams) (string, error) {
 		return "", errors.New("Invalid host parameters found")
 	}
 
-	hostID := ""
+	hostID := make([]string, 0)
 	err := c.Get("host.create", host, &hostID)
 	if err != nil {
 		return "", err
 	}
 
-	return hostID, nil
+	return hostID[0], nil
 }
