@@ -48,6 +48,8 @@ func (c *Response) Err() error {
 
 // Bind unmarshals the JSON body of the Response into the given interface.
 func (c *Response) Bind(v interface{}) error {
+	fmt.Printf("%+v\n\n", string(c.Body))
+
 	err := json.Unmarshal(c.Body, v)
 	if err != nil {
 		return fmt.Errorf("Error decoding JSON response body: %v", err)
