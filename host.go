@@ -455,20 +455,25 @@ func validateHostParams(params HostCreateParams) bool {
 	return true
 }
 
+// HostCreateResponse stores the response of the HostCreate function
+type HostCreateResponse struct {
+	HostIDs []string `json:"hostids"`
+}
+
 // HostCreate queries the Zabbix API for Hosts matching the given search
 // parameters.
 //
 // An error is returned if a transport, parsing or API error occurs.
-func (c *Session) HostCreate(host HostCreateParams) (string, error) {
+func (c *Session) HostCreate(host HostCreateParams) (*HostCreateResponse, error) {
 	if isInvalid := validateHostParams(host); isInvalid == true {
-		return "", errors.New("Invalid host parameters found")
+		return nil, errors.New("Invalid host parameters found")
 	}
 
-	hostID := make([]string, 0)
-	err := c.Get("host.create", host, &hostID)
+	hostIDs := HostCreateResponse{}
+	err := c.Get("host.create", host, &hostIDs)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return hostID[0], nil
+	return &hostIDs, nil
 }
