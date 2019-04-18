@@ -31,7 +31,6 @@ type Item struct {
 	LastValueType int
 }
 
-
 type ItemGetParams struct {
 	GetParameters
 
@@ -99,7 +98,6 @@ type ItemGetParams struct {
 
 	// WithTriggers flag return only items that are used in triggers
 	WithTriggers bool `json:"with_triggers,omitempty"`
-
 }
 
 // GetItems queries the Zabbix API for Items matching the given search
