@@ -31,6 +31,7 @@ type Item struct {
 	LastValueType int
 }
 
+// ItemGetParams defines the parameters to send alongside the get item request
 type ItemGetParams struct {
 	GetParameters
 
